@@ -10,6 +10,7 @@ import UIKit
 class TabBarViewController : UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpViewControllers()
     }
     
     private func setUpViewControllers(){
@@ -24,4 +25,6 @@ class TabBarViewController : UITabBarController {
         self.viewControllers = viewControllers
         self.selectedIndex = 0
     }
+    
+    
 }
