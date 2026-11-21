@@ -7,6 +7,7 @@
 
 import UIKit
 import Photos
+import PhotosUI
 
 class CamaraViewController: UIViewController {
     
@@ -66,8 +67,19 @@ class CamaraViewController: UIViewController {
         present(picker, animated: true)
     }
     
+    private func openPhotoLibrary(){
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .images
+        configuration.selectionLimit = 1
+        
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
     @objc func addPhoto(){
-        openCamera()
+        //openCamera()
+        openPhotoLibrary()
     }
 
 }
@@ -81,5 +93,21 @@ extension CamaraViewController : UIImagePickerControllerDelegate, UINavigationCo
             photo.image = image
         }
         picker.dismiss(animated: true)
+    }
+}
+
+//MARK: Este delegado sirve para seleccionar una foto dle carrete
+extension CamaraViewController : PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        guard let result = results.first else {return}
+        result.itemProvider.loadObject(ofClass: UIImage.self){
+            object, error in
+            guard let image = object as? UIImage else {return}
+            DispatchQueue.main.async {
+                print("Imagen seleccionada:", image)
+                self.photo.image = image
+            }
+        }
     }
 }
