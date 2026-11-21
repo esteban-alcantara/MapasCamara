@@ -10,16 +10,19 @@ import MapKit
 
 class MapsViewController: UIViewController {
     
-    private var mapView = MKMapView()
-
+    private let mapView = MKMapView()
+    private let locationManager = CLLocationManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpMap()
-        centerMap()
-        addAnotation()
+        setupMap()
+        //centerMap()
+        addAnnotation()
+        setupLocation()
+        centerMapIOSLab()
     }
     
-    private func setUpMap(){
+    private func setupMap(){
         view.addSubview(mapView)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -38,7 +41,7 @@ class MapsViewController: UIViewController {
         mapView.setRegion(region, animated: true)
     }
     
-    private func addAnotation(){
+    private func addAnnotation(){
         let annotation = MKPointAnnotation()
         
         annotation.title = "Ciudad de México"
@@ -48,5 +51,31 @@ class MapsViewController: UIViewController {
         
         mapView.addAnnotation(annotation)
     }
+    
+    private func setupLocation(){
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        mapView.showsUserLocation = true
+    }
+    
+    private func centerMapIOSLab(){
+        
+        let coordinate = CLLocationCoordinate2D(latitude: 19.32758, longitude: -99.18231)
+        
+        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
+        
+        mapView.setRegion(region, animated: true)
+    }
+}
 
+extension MapsViewController: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedAlways, .authorizedWhenInUse:
+            mapView.showsUserLocation = true
+        default:
+            break
+        }
+    }
 }
