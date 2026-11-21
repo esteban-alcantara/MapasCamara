@@ -20,8 +20,14 @@ class TabBarViewController : UITabBarController {
         mapsNavigation.tabBarItem.title = "Mapas"
         mapsNavigation.tabBarItem.image = UIImage(systemName: "mappin.circle")
         
+        //MARK: Camara
+        let camaraViewController = CamaraViewController()
+        let camaraNavigation = UINavigationController(rootViewController: camaraViewController)
+        camaraNavigation.tabBarItem.title = "Camara"
+        camaraNavigation.tabBarItem.image = UIImage(systemName: "camera.fill")
+        
         //MARK: ViewControllersArray
-        let viewControllers : [UIViewController] = [mapsNavigation]
+        let viewControllers : [UIViewController] = [mapsNavigation, camaraNavigation]
         self.viewControllers = viewControllers
         self.selectedIndex = 0
     }
